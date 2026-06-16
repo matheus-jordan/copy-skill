@@ -47,7 +47,10 @@ Perguntar para qual cliente, mapear para o slug da pasta.
 
 **Passo 8 — Protocolo pós-entrega (obrigatório).** Após entregar o output, perguntar: "Esse foi aprovado pelo cliente ou teve ajuste? Me conta o que mudou para eu registrar no contexto do cliente." Registrar o resultado em `clientes/<slug>/contexto.md` conforme o protocolo de captura de aprendizado.
 
-**Passo 9 — Registrar na ferramenta de gestão (opcional).** Após o protocolo pós-entrega, perguntar: "Quer que eu registre isso como task no seu sistema de gestão?" Se sim e houver MCP de tasks conectado, criar a task com: título descritivo (cliente + tipo de entregável + ângulo), responsável conforme definido no `contexto.md` do cliente, e o briefing completo no corpo da task.
+**Passo 9 — Subir no Ekyte (obrigatório perguntar).** Após o protocolo pós-entrega, perguntar: "Quer que eu suba isso no Ekyte?" Se sim, executar nesta ordem:
+1. Acionar a skill `/briefing` passando todo o contexto do entregável gerado (cliente, tipo, ângulo, copy produzida, direcionamento visual se houver)
+2. Usar `mcp__ekyte__create_task` para criar a task com o briefing gerado, associada ao workspace e projeto correto do cliente
+3. Configurar a task com: título padronizado pelo ticker (ex: `[04][CA] Destra Consultoria | Criativo Meta — Ângulo Auditoria`), responsável conforme time do cliente em `contexto.md`, tipo de task correspondente ao entregável
 
 ---
 
@@ -87,26 +90,30 @@ Ler `clientes/<slug>/contexto.md`. Identificar:
 - CTA validado
 
 **2. Base de conhecimento**
-Se existir `executar/briefing-guia-referencia.md` no repositório, ler e identificar princípios aplicáveis ao entregável e ao nicho do cliente. Caso não exista, prosseguir com o contexto disponível.
+Ler `executar/briefing-guia-referencia.md` e memória `briefing-knowledge.md`. Identificar princípios aplicáveis ao entregável e ao nicho do cliente.
 
 **3. Protocolo Anti-Genérico — coleta de linguagem específica (obrigatório)**
 
 Copy genérica vem de usar as palavras da empresa sobre o produto. Copy estratégica usa as palavras que o ICP usa para descrever o próprio problema. Executar as buscas abaixo em paralelo antes de escrever qualquer linha:
 
-**3a. Linguagem do ICP** — buscar como o ICP descreve o problema com palavras próprias. Usar as fontes disponíveis no setup do usuário:
-- Se houver MCP de transcrições/calls conectado: buscar falas literais do ICP sobre o problema que o produto resolve
-- Se houver MCP de mensagens (WhatsApp, Slack, etc.): buscar mensagens recentes sobre o produto/problema
-- Se nenhum MCP estiver disponível: consultar o `contexto.md` do cliente e, se necessário, pedir ao usuário exemplos de linguagem do ICP
+**3a. Linguagem do ICP** — buscar como o ICP descreve o problema com palavras próprias:
+- NotebookLM: `npx notebooklm ask <client_documentid> "Quais frases ou palavras o cliente/ICP usou para descrever o problema que o produto resolve? Transcreva falas literais de calls ou entrevistas."`
+- BigQuery WhatsApp: buscar mensagens recentes do grupo do cliente com `mcp__bigquery-whatsapp__whatsapp_buscar_mensagens_queryon` filtrando por palavras ligadas ao problema/produto
 
-**3b. Manual de Copy e análise competitiva** — buscar nas fontes disponíveis:
-- Se houver MCP de Google Drive conectado: buscar arquivos com "Manual", "Copy" ou "Competitiv" no nome relacionados ao cliente
+**Protocolo de autenticação NotebookLM:**
+- Tentar `npx notebooklm ask` diretamente
+- Se retornar "Not authenticated": rodar `npx notebooklm login` em background, avisar o usuário que o Chromium abriu e instruir: "Complete o login Google e pressione Enter no terminal"
+- Após autenticação, retomar sem pedir contexto manual
+- Se falhar após 2 tentativas: **o Manual de Copy do Drive (passo 3b) se torna a fonte primária de linguagem do ICP.** Não é plano B opcional — assume esse papel automaticamente. Continuar sem sinalizar falha ao usuário.
+
+**3b. Manual de Copy e análise competitiva** — buscar no Drive (fonte primária quando NotebookLM indisponível):
+- `mcp__claude_ai_Google_Drive__search_files` com query `fullText contains '<nome do cliente>' and (title contains 'Manual' or title contains 'Copy' or title contains 'Competitiv')`
 - Se encontrar Manual de Copy: ler e extrair tom de voz, palavras aprovadas/proibidas, posicionamento
 - Se encontrar Análise Competitiva: extrair o que concorrentes comunicam para diferenciar
-- Se não houver Drive conectado: verificar se existe algum documento de referência na pasta do cliente no repositório
 
-**3c. Histórico de copy aprovada/reprovada** — buscar nas fontes disponíveis:
-- Se houver MCP de gestão de tasks conectado (Ekyte, Linear, Notion, etc.): buscar tasks de copy concluídas para o cliente e identificar ângulos aprovados ou reprovados
-- Se não houver MCP: consultar seções `## Copy aprovada` e `## Copy reprovada` no `contexto.md` do cliente
+**3c. Histórico de copy aprovada/reprovada** — buscar no Ekyte:
+- `mcp__ekyte__list_tasks` filtrando pelo workspace do cliente, tipo `[CA]` ou `[CP]`, concluídas
+- Ler as tasks mais recentes para identificar ângulos que foram aprovados ou travaram
 
 **4. Perguntas obrigatórias ao usuário** (fazer antes de gerar, não antes de coletar contexto):
 
