@@ -71,27 +71,27 @@ Antes de escrever qualquer linha, a skill lê `clientes/<slug>/contexto.md`. Ess
 
 **Criativo Meta:**
 ```
-/copy Destra Consultoria — criativo estático para audiência fria, ângulo ISO para PMEs
+/copy [Cliente] — criativo estático para audiência fria, ângulo [dor principal do ICP]
 ```
 
 **Landing Page:**
 ```
-/copy Meca Automatizadores — LP para captação de leads de automação de processos
+/copy [Cliente] — LP para captação de leads de [produto/serviço]
 ```
 
 **Google Ads:**
 ```
-/copy Aya Cleaning — RSA para campanha de busca "limpeza residencial Los Angeles"
+/copy [Cliente] — RSA para campanha de busca "[termo principal]"
 ```
 
 **Roteiro de vídeo:**
 ```
-/copy Nuveto — roteiro UGC com hook sobre rotatividade de funcionários, 60s
+/copy [Cliente] — roteiro UGC com hook sobre [problema do ICP], 60s
 ```
 
 **Social Media:**
 ```
-/copy Sol Interiors — pauta de Instagram, tema: antes e depois de reforma residencial
+/copy [Cliente] — pauta de Instagram, tema: [tema relevante para o ICP]
 ```
 
 ---
