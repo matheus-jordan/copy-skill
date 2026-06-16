@@ -71,7 +71,7 @@ Perguntar para qual cliente, mapear para o slug da pasta.
 ### FASE 1 — Identificação
 
 Extrair do input:
-- **Cliente** → mapear para slug. Slugs conhecidos: "Meca" → `meca-automatizadores`, "Destra" → `destra-consultoria`, "Nuveto" → `nuveto`, "Aya" → `aya-cleaning`, "Sol" → `sol-interiors`, "Reveservice" → `reveservice`. Se o cliente não estiver na lista, verificar a pasta `clientes/` via Glob para encontrar o slug correto antes de continuar.
+- **Cliente** → mapear para slug. Usar Glob para listar as pastas dentro de `clientes/` e identificar o slug correto com base no nome fornecido pelo usuário. O nome da pasta é o slug. Se o nome bater com mais de uma pasta ou não for claro, perguntar ao usuário antes de continuar.
 - **Tipo** de entregável (lp / criativo / google / roteiro / social)
 - **Task ID Ekyte** (opcional) — se informado, puxar briefing via MCP antes de continuar
 - **Objetivo** — o que essa copy precisa fazer (converter, gerar lead, vender direto)
